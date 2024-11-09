@@ -22,6 +22,9 @@ namespace PLAYERTWO.PlatformerProject{
 public LayerMask myLayerMask; //Select the layers that the fireball ignores. 
 public int enemyDamageAmount = 1; //PP Enemy Damage setting
 
+ public bool timeDestroy;
+           public float TimeToDestroy = 1f;
+           float counter;
 
 public UnityEvent onExplode; //Events that trigger when the projectile hits something
 
@@ -38,6 +41,19 @@ public UnityEvent onExplode; //Events that trigger when the projectile hits some
                 Destroy(muzzleParticle, 1.5f); // 2nd parameter is lifetime of effect in seconds
             }
         }
+ void Update()
+    {
+        counter += Time.deltaTime;
+
+        if (!timeDestroy) return;
+
+        if (counter >= TimeToDestroy)
+        {
+           Explode();
+        }
+    }
+
+
         protected virtual void InitializeCollider()
 		{
 			m_collider = GetComponent<Collider>();
@@ -113,6 +129,8 @@ onExplode?.Invoke();
 {
     HandleCollision(collision.collider);
 
+
+
     
 }
 
@@ -137,7 +155,32 @@ onExplode?.Invoke();
     
     
 }
+private void Explode(){
 
+      
+
+               // transform.position = hit.point + (hit.normal * collideOffset); // Move projectile to point of collision
+
+                GameObject impactP = Instantiate(impactParticle, transform.position, Quaternion.FromToRotation(Vector3.up, transform.up)) as GameObject; // Spawns impact effect
+
+                ParticleSystem[] trails = GetComponentsInChildren<ParticleSystem>(); // Gets a list of particle systems, as we need to detach the trails
+                //Component at [0] is that of the parent i.e. this object (if there is any)
+                for (int i = 1; i < trails.Length; i++) // Loop to cycle through found particle systems
+                {
+                    ParticleSystem trail = trails[i];
+
+                    if (trail.gameObject.name.Contains("Trail"))
+                    {
+                        trail.transform.SetParent(null); // Detaches the trail from the projectile
+                        Destroy(trail.gameObject, 2f); // Removes the trail after seconds
+                    }
+                }
+onExplode?.Invoke();
+                Destroy(projectileParticle, 3f); // Removes particle effect after delay
+                Destroy(impactP, 3.5f); // Removes impact effect after delay
+                Destroy(gameObject); // Removes the projectile
+              
+}
 
    
     }
