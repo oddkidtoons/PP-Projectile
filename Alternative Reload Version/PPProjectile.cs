@@ -35,6 +35,8 @@ public UnityEvent onExplode; //Events that trigger when the projectile hits some
              
             projectileParticle = Instantiate(projectileParticle, transform.position, transform.rotation) as GameObject;
             projectileParticle.transform.parent = transform;
+            
+            
             if (muzzleParticle)
             {
                 muzzleParticle = Instantiate(muzzleParticle, transform.position, transform.rotation) as GameObject;
@@ -102,7 +104,7 @@ public UnityEvent onExplode; //Events that trigger when the projectile hits some
             if (Physics.SphereCast(transform.position, radius, direction, out hit, detectionDistance, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)) // Checks if collision will happen
             {
                 transform.position = hit.point + (hit.normal * collideOffset); // Move projectile to point of collision
-
+if (impactParticle != null){ 
                 GameObject impactP = Instantiate(impactParticle, transform.position, Quaternion.FromToRotation(Vector3.up, transform.up)) as GameObject; // Spawns impact effect
 
                 ParticleSystem[] trails = GetComponentsInChildren<ParticleSystem>(); // Gets a list of particle systems, as we need to detach the trails
@@ -117,9 +119,12 @@ public UnityEvent onExplode; //Events that trigger when the projectile hits some
                         Destroy(trail.gameObject, 2f); // Removes the trail after seconds
                     }
                 }
+
+                 Destroy(impactP, 3.5f); // Removes impact effect after delay
+                }
 onExplode?.Invoke();
                 Destroy(projectileParticle, 3f); // Removes particle effect after delay
-                Destroy(impactP, 3.5f); // Removes impact effect after delay
+               
                 Destroy(gameObject); // Removes the projectile
             }
         }
@@ -160,7 +165,7 @@ private void Explode(){
       
 
                // transform.position = hit.point + (hit.normal * collideOffset); // Move projectile to point of collision
-
+if (impactParticle != null){ 
                 GameObject impactP = Instantiate(impactParticle, transform.position, Quaternion.FromToRotation(Vector3.up, transform.up)) as GameObject; // Spawns impact effect
 
                 ParticleSystem[] trails = GetComponentsInChildren<ParticleSystem>(); // Gets a list of particle systems, as we need to detach the trails
@@ -175,9 +180,11 @@ private void Explode(){
                         Destroy(trail.gameObject, 2f); // Removes the trail after seconds
                     }
                 }
+                  Destroy(impactP, 3.5f); // Removes impact effect after delay
+                }
 onExplode?.Invoke();
                 Destroy(projectileParticle, 3f); // Removes particle effect after delay
-                Destroy(impactP, 3.5f); // Removes impact effect after delay
+                
                 Destroy(gameObject); // Removes the projectile
               
 }

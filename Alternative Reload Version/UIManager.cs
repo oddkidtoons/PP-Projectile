@@ -27,7 +27,7 @@ public class UIManager : MonoBehaviour
     {
         if (ammoCountText != null && playerProjectileTrigger != null)
         {
-            ammoCountText.text = "Ammo: " + playerProjectileTrigger.currentAmmo.ToString();
+            ammoCountText.text = "" + playerProjectileTrigger.currentAmmo.ToString();
         }
     }
 
